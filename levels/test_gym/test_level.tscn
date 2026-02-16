@@ -1,0 +1,49 @@
+[gd_scene load_steps=8 format=3 uid="uid://e2m5x9y7r8z4"]
+
+[ext_resource type="PackedScene" uid="uid://b8j2x6y4q5z1" path="res://entities/aircraft/player_jet.tscn" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://d1l4x8y6q7z3" path="res://ui/hud/hud.tscn" id="2_hud"]
+[ext_resource type="Script" path="res://_core/mission_manager.gd" id="3_mission"]
+[ext_resource type="PackedScene" uid="uid://c9k3x7y5p6z2" path="res://entities/aircraft/enemy_mig.tscn" id="4_enemy"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_day"]
+sky_top_color = Color(0.2, 0.4, 0.8, 1)
+sky_horizon_color = Color(0.6, 0.7, 0.8, 1)
+
+[sub_resource type="Sky" id="Sky_main"]
+sky_material = SubResource("ProceduralSkyMaterial_day")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_red"]
+albedo_color = Color(0.3, 0.3, 0.3, 1)
+
+[sub_resource type="Environment" id="Environment_main"]
+background_mode = 2
+sky = SubResource("Sky_main")
+ambient_light_source = 3
+
+[node name="TestLevel" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_main")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.5, -0.7, 0.5, 0, 0.58, 0.8, -0.8, -0.4, 0.29, 0, 10, 0)
+shadow_enabled = true
+
+[node name="PlayerJet" parent="." instance=ExtResource("1_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, 0)
+
+[node name="HUD" parent="." instance=ExtResource("2_hud")]
+
+[node name="MissionManager" type="Node" parent="." node_paths=PackedStringArray("enemy_spawner")]
+script = ExtResource("3_mission")
+enemy_spawner = NodePath("../EnemySpawner")
+enemy_scene = ExtResource("4_enemy")
+
+[node name="EnemySpawner" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 100, -500)
+
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -10, 0)
+use_collision = true
+size = Vector3(10000, 1, 10000)
+material = SubResource("StandardMaterial3D_red")

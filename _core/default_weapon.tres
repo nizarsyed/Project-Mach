@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="WeaponConfig" format=3 uid="uid://c2l3x00as605"]
+
+[ext_resource type="Script" path="res://_core/weapon_config.gd" id="1_wconfig"]
+
+[resource]
+script = ExtResource("1_wconfig")
+damage = 10.0
+fire_rate = 0.08
+max_range = 1500.0
+bullet_speed = 2000.0
+heat_per_shot = 0.02
+cooling_rate = 0.4
+magnetism_angle_degrees = 5.0
+magnetism_strength = 0.5

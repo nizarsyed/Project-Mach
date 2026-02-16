@@ -1,0 +1,52 @@
+[gd_scene load_steps=7 format=3 uid="uid://b8j2x6y4q5z1"]
+
+[ext_resource type="Script" path="res://components/flight/flight_physics.gd" id="1_physics"]
+[ext_resource type="Script" path="res://components/flight/camera_controller.gd" id="2_camera"]
+[ext_resource type="Script" path="res://components/combat/machine_gun.gd" id="3_gun"]
+[ext_resource type="Resource" uid="uid://b1k2x9y8r5z4" path="res://_core/default_jet.tres" id="4_jetconfig"]
+[ext_resource type="Resource" uid="uid://c2l3x0y9s6z5" path="res://_core/default_weapon.tres" id="5_wconfig"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fuselage"]
+radius = 0.5
+height = 4.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_blue"]
+albedo_color = Color(0.2, 0.4, 0.8, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_visual"]
+material = SubResource("StandardMaterial3D_blue")
+radius = 0.5
+height = 4.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_wings"]
+size = Vector3(5, 0.2, 2)
+
+[node name="PlayerJet" type="RigidBody3D" groups=["Player", "RadarTarget"]]
+mass = 12000.0
+script = ExtResource("1_physics")
+config = ExtResource("4_jetconfig")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_fuselage")
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="Fuselage" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_visual")
+
+[node name="Wings" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+mesh = SubResource("BoxMesh_wings")
+
+[node name="MachineGun" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+script = ExtResource("3_gun")
+config = ExtResource("5_wconfig")
+
+[node name="CameraController" type="Camera3D" parent="." node_paths=PackedStringArray("target_vehicle")]
+transform = Transform3D(1, 0, 0, 0, 0.984808, 0.173648, 0, -0.173648, 0.984808, 0, 4, 10)
+script = ExtResource("2_camera")
+target_vehicle = NodePath("..")
+offset = Vector3(0, 3, 8)

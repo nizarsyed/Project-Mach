@@ -1,0 +1,39 @@
+[gd_scene load_steps=6 format=3 uid="uid://c9k3x7y5p6z2"]
+
+[ext_resource type="Script" path="res://components/flight/enemy_ai.gd" id="1_ai"]
+[ext_resource type="Resource" uid="uid://b1k2x9y8r5z4" path="res://_core/default_jet.tres" id="2_jetconfig"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_enemy"]
+radius = 0.5
+height = 4.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_red"]
+albedo_color = Color(0.8, 0.2, 0.2, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_enemy"]
+material = SubResource("StandardMaterial3D_red")
+radius = 0.5
+height = 4.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_wings_enemy"]
+material = SubResource("StandardMaterial3D_red")
+size = Vector3(4, 0.2, 1.5)
+
+[node name="EnemyJet" type="RigidBody3D" groups=["Targets", "RadarTarget"]]
+mass = 1000.0
+script = ExtResource("1_ai")
+config = ExtResource("2_jetconfig")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_enemy")
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="Fuselage" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CapsuleMesh_enemy")
+
+[node name="Wings" type="MeshInstance3D" parent="Visuals"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.5)
+mesh = SubResource("BoxMesh_wings_enemy")
