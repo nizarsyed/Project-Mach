@@ -27,6 +27,8 @@ func _ready():
 	custom_integrator = true
 	contact_monitor = true
 	max_contacts_reported = 1
+	if not body_entered.is_connected(_on_body_entered):
+		body_entered.connect(_on_body_entered)
 
 func launch(start_transform: Transform3D, initial_velocity: Vector3, new_target: Node3D):
 	global_transform = start_transform
@@ -67,7 +69,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 		var target_vel = Vector3.ZERO
 		if target is RigidBody3D:
 			target_vel = target.linear_velocity
-		elif "velocity" in target:
+		elif target is CharacterBody3D:
 			target_vel = target.velocity
 		
 		if not (target is Flare) and randf() < (flare_distraction_chance * dt * 5.0):
@@ -92,7 +94,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 	var desired_velocity = forward * _current_speed
 	state.linear_velocity = state.linear_velocity.lerp(desired_velocity, aero_drag_smoothness * dt)
 
-func _on_body_entered(body):
+func _on_body_entered(body: Node):
 	if body == self: return
 	if body.has_method("take_damage"):
 		body.take_damage(damage)

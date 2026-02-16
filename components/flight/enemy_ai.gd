@@ -1,4 +1,4 @@
-extends FlightPhysics
+extends "res://components/flight/flight_physics.gd"
 class_name EnemyAI
 
 enum State { PATROL, ACQUIRE, CHASE, EVADE }
@@ -16,6 +16,8 @@ var _ai_timer: float = 0.0
 func _ready():
 	super._ready()
 	_ai_timer = randf() * update_rate
+	if not is_instance_valid(target):
+		target = get_tree().get_first_node_in_group("Player") as Node3D
 
 func _process(delta):
 	_ai_timer -= delta
@@ -74,8 +76,10 @@ func _steer_towards(target_pos: Vector3):
 func _predict_target_lead(t: Node3D) -> Vector3:
 	var dist = global_position.distance_to(t.global_position)
 	var time = dist / 2000.0
-	if "linear_velocity" in t:
+	if t is RigidBody3D:
 		return t.global_position + (t.linear_velocity * time)
+	if t is CharacterBody3D:
+		return t.global_position + (t.velocity * time)
 	return t.global_position
 
 func on_missile_locked(missile: Node3D):

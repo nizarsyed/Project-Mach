@@ -1,6 +1,8 @@
 extends Node
 class_name MissionManager
 
+const EnemyAI = preload("res://components/flight/enemy_ai.gd")
+
 signal wave_started(wave_num: int)
 signal mission_complete(score: int)
 signal mission_check_point(msg: String)
@@ -13,6 +15,12 @@ var current_wave_index: int = 0
 var active_enemies: int = 0
 var score: int = 0
 var game_active: bool = false
+
+func _ready():
+	if enemy_scene and enemy_spawner:
+		call_deferred("start_mission")
+	else:
+		push_warning("MissionManager: enemy_scene or enemy_spawner is not configured.")
 
 func start_mission():
 	score = 0
@@ -33,13 +41,21 @@ func _start_next_wave():
 	current_wave_index += 1
 
 func _spawn_enemies(count: int):
+	if not enemy_scene or not enemy_spawner:
+		active_enemies = 0
+		return
+
 	active_enemies = count
+	var player = get_tree().get_first_node_in_group("Player") as Node3D
+	var parent_node = enemy_spawner.get_parent() if is_instance_valid(enemy_spawner.get_parent()) else self
+
 	for i in range(count):
-		if not enemy_scene: break
 		var enemy = enemy_scene.instantiate()
-		add_child(enemy)
+		parent_node.add_child(enemy)
 		# Random position around spawner
 		enemy.global_position = enemy_spawner.global_position + Vector3(randf_range(-1000, 1000), randf_range(500, 1000), randf_range(-1000, 1000))
+		if enemy is EnemyAI and is_instance_valid(player):
+			enemy.target = player
 		# Connect 'tree_exited' or custom signal 'died'
 		enemy.tree_exited.connect(_on_enemy_died)
 

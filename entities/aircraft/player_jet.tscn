@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://components/flight/flight_physics.gd" id="1_physics"]
 [ext_resource type="Script" path="res://components/flight/camera_controller.gd" id="2_camera"]
 [ext_resource type="Script" path="res://components/combat/machine_gun.gd" id="3_gun"]
-[ext_resource type="Resource" uid="uid://b1k2x9y8r5z4" path="res://_core/default_jet.tres" id="4_jetconfig"]
-[ext_resource type="Resource" uid="uid://c2l3x0y9s6z5" path="res://_core/default_weapon.tres" id="5_wconfig"]
+[ext_resource type="Resource" path="res://_core/default_jet.tres" id="4_jetconfig"]
+[ext_resource type="Resource" path="res://_core/default_weapon.tres" id="5_wconfig"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fuselage"]
 radius = 0.5

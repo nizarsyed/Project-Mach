@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://c9k3x7y5p6z2"]
 
 [ext_resource type="Script" path="res://components/flight/enemy_ai.gd" id="1_ai"]
-[ext_resource type="Resource" uid="uid://b1k2x9y8r5z4" path="res://_core/default_jet.tres" id="2_jetconfig"]
+[ext_resource type="Resource" path="res://_core/default_jet.tres" id="2_jetconfig"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_enemy"]
 radius = 0.5

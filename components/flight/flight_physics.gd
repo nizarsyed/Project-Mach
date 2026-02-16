@@ -1,23 +1,46 @@
 extends RigidBody3D
 class_name FlightPhysics
 
+const JetConfig = preload("res://_core/jet_config.gd")
+const MachineGun = preload("res://components/combat/machine_gun.gd")
+
 @export var config: JetConfig
+@export var max_health: float = 100.0
 
 var _current_throttle: float = 0.0
 var _input_pitch: float = 0.0
 var _input_roll: float = 0.0
 var _input_yaw: float = 0.0
+var _current_health: float = 0.0
 
 var _forward_speed: float = 0.0
 var _aoa_dot: float = 1.0
+@onready var _machine_gun: MachineGun = get_node_or_null("MachineGun") as MachineGun
 
 func _ready():
 	custom_integrator = true
 	linear_damp = 0.0
 	angular_damp = 2.0
+	_current_health = max_health
 	
 	if not config:
 		printerr("FlightPhysics: No JetConfig assigned!")
+
+func _process(_delta):
+	if not is_in_group("Player"):
+		return
+
+	var input_manager = get_node_or_null("/root/InputManager")
+	if not is_instance_valid(input_manager):
+		return
+
+	_input_pitch = float(input_manager.get("pitch_input"))
+	_input_roll = float(input_manager.get("roll_input"))
+	_input_yaw = float(input_manager.get("yaw_input"))
+	_current_throttle = float(input_manager.get("throttle_input"))
+
+	if bool(input_manager.get("fire_primary")) and is_instance_valid(_machine_gun):
+		_machine_gun.fire(linear_velocity)
 
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if not config: return
@@ -67,3 +90,14 @@ func _integrate_forces(state: PhysicsDirectBodyState3D):
 	torque += transform.basis.y * _input_yaw * config.yaw_speed
 	
 	state.apply_torque(torque * authority * config.mass * 100.0)
+
+func take_damage(amount: float):
+	if amount <= 0.0:
+		return
+
+	_current_health -= amount
+	if _current_health <= 0.0:
+		_destroy_vehicle()
+
+func _destroy_vehicle():
+	queue_free()

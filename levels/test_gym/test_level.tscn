@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://e2m5x9y7r8z4"]
 
-[ext_resource type="PackedScene" uid="uid://b8j2x6y4q5z1" path="res://entities/aircraft/player_jet.tscn" id="1_player"]
-[ext_resource type="PackedScene" uid="uid://d1l4x8y6q7z3" path="res://ui/hud/hud.tscn" id="2_hud"]
+[ext_resource type="PackedScene" path="res://entities/aircraft/player_jet.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://ui/hud/hud.tscn" id="2_hud"]
 [ext_resource type="Script" path="res://_core/mission_manager.gd" id="3_mission"]
-[ext_resource type="PackedScene" uid="uid://c9k3x7y5p6z2" path="res://entities/aircraft/enemy_mig.tscn" id="4_enemy"]
+[ext_resource type="PackedScene" path="res://entities/aircraft/enemy_mig.tscn" id="4_enemy"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_day"]
 sky_top_color = Color(0.2, 0.4, 0.8, 1)

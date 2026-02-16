@@ -7,6 +7,7 @@ class_name Flare
 var _timer: float = 0.0
 
 func _ready():
+	add_to_group("Flares")
 	set_process(true)
 
 func _process(delta):

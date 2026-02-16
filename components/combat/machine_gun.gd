@@ -1,6 +1,8 @@
 extends Node3D
 class_name MachineGun
 
+const WeaponConfig = preload("res://_core/weapon_config.gd")
+
 @export var config: WeaponConfig
 @export var muzzle_point: Marker3D
 
@@ -28,8 +30,11 @@ func fire(owner_velocity: Vector3):
 		var dir_to_target = (best_target.global_position - global_position).normalized()
 		final_dir = forward.lerp(dir_to_target, config.magnetism_strength).normalized()
 	
+	var ray_origin = muzzle_point.global_position if is_instance_valid(muzzle_point) else global_position
+	var ray_end = ray_origin + (final_dir * config.max_range)
+
 	var space_state = get_world_3d().direct_space_state
-	var query = PhysicsRayQueryParameters3D.create(global_position, global_position + (final_dir * config.max_range))
+	var query = PhysicsRayQueryParameters3D.create(ray_origin, ray_end)
 	query.collide_with_areas = true
 	query.collide_with_bodies = true
 	
